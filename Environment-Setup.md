@@ -1,6 +1,8 @@
 # Lab 0: Environment Setup Report
 Name: Muhammad A'beed bin Firdaus 52215124303
+
 Subject: Cloud computing security essentials
+
 Code: IKB 42603
 
 ## Purpose
