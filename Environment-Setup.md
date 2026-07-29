@@ -5,13 +5,15 @@ Subject: Cloud computing security essentials
 
 Code: IKB 42603
 
+Date: 28 July 2026
+
 ## Purpose
 
-This report documents the local development environment setup and verification. The accompanying screenshots are used as evidence of each completed check.
+This report documents the local development environment setup and verification for future lab usage. The accompanying screenshots are used as evidence of each completed check.
 
 ## 1. Docker
 
-Docker was installed and verified from the command line.
+Docker was installed and verified from the command line from the docker official website. Ensure WSL2 is picked when prompted.
 
 ```text
 docker --version
@@ -35,7 +37,7 @@ This message shows that your installation appears to be working correctly.
 
 ## 2. AWS CLI
 
-The AWS Command Line Interface was installed and its version was checked.
+The AWS Command Line Interface was installed and its version was checked. Installed from offical AWS v2 msi file.
 
 ```text
 aws --version
@@ -51,7 +53,7 @@ aws-cli/2.36.9 Python/3.14.6 Windows/11 exe/AMD64
 
 ## 3. kind and kubectl
 
-The Kubernetes-in-Docker (`kind`) tool and Kubernetes command-line client (`kubectl`) were installed and verified.
+The Kubernetes-in-Docker (`kind`) tool and Kubernetes command-line client (`kubectl`) were installed and verified with the use of choco through cmd.
 
 ```text
 kind --version
@@ -83,7 +85,7 @@ Git Bash was installed successfully, providing a Unix-like terminal for running 
 ## 5. Start and Stop the Lab Environment 
 (Local AWS)
 
-LocalStack was started in Docker and exposed on port `4566`. An old version is used to credentials aren't needed.
+LocalStack was started in Docker and exposed on port `4566`. An old version is used so credentials aren't needed.
 
 ```text
 docker run -d --name localstack -p 4566:4566 localstack/localstack:4.14.0
@@ -143,7 +145,7 @@ kind delete cluster --name ccse
 
 ## 6. AWS CLI Configuration for LocalStack
 
-The AWS CLI was configured with LocalStack test credentials and a default region.
+The AWS CLI was configured with LocalStack test credentials and a default region. Command is ran on GitBash.
 
 ```text
 aws configure set aws_access_key_id test
