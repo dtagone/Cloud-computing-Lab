@@ -9,7 +9,11 @@ Date: 28 July 2026
 
 ## Purpose
 
-This report documents the local development environment setup and verification for future lab usage. The accompanying screenshots are used as evidence of each completed check.
+This report documents the local development environment setup and verification for Windows 11. The accompanying screenshots are used as evidence of each completed check.
+
+## Requirement
+
+At least 16gb RAM and more than 10gb storage space.
 
 ## 1. Docker
 
@@ -37,7 +41,7 @@ This message shows that your installation appears to be working correctly.
 
 ## 2. AWS CLI
 
-The AWS Command Line Interface was installed and its version was checked. Installed from offical AWS v2 msi file.
+The AWS Command Line Interface was installed and its version was checked. Installed from https://awscli.amazonaws.com/AWSCLIV2-3.14.6.msi
 
 ```text
 aws --version
@@ -73,7 +77,7 @@ Kustomize Version: v5.8.1
 
 ## 4. Helper Tools
 
-Git Bash was installed successfully, providing a Unix-like terminal for running the lab commands.
+Git Bash was installed successfully, providing a Unix-like terminal for running the lab commands. Install from here, https://git-scm.com/install/windows.
 
 **Result:** The helper terminal environment is available.
 
@@ -102,9 +106,10 @@ The container lifecycle was also checked:
 ```text
 docker stop localstack
 docker start localstack
+docker rm -f localstack
 ```
 
-**Result:** LocalStack is running as a Docker container and its AWS-compatible local service endpoint is healthy.
+**Result:** LocalStack is running as a Docker container and its AWS-compatible local service endpoint is healthy. (You can also check in the docker app to see whether a new container is created.)
 
 **Evidence:** 
 
@@ -136,7 +141,7 @@ The cluster was then removed as part of the lifecycle test:
 kind delete cluster --name ccse
 ```
 
-**Result:** A local Kubernetes cluster can be created, accessed, checked, and deleted successfully.
+**Result:** A local Kubernetes cluster can be created, accessed, checked, and deleted successfully. (You can also check in the docker app to see whether cluster is created.)
 
 **Evidence:** 
 
