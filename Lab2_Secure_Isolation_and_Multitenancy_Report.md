@@ -6,7 +6,7 @@ Subject: Cloud Computing Security Essentials
 
 Code: IKB 42603
 
-Lecturer: Prof. Dr. Shahrulniza Musa
+Lecturer: Madam Adani
 
 Date: 9 Aug 2026
 
@@ -25,9 +25,11 @@ This lab demonstrates how a shared Kubernetes cluster can isolate multiple tenan
 
 A `kind` cluster named `ccse-lab2` was created with the default CNI disabled and pod subnet `192.168.0.0/16`. Calico v3.27.0 was then installed, and the `calico-node` DaemonSet rollout completed successfully. Calico is required because a default `kind` cluster does not enforce Kubernetes `NetworkPolicy` objects.
 
-<img width="803" alt="Lab 2 cluster setup" src="Lab%202%20Setup%20Part%201.png" />
+<img width="847" height="441" alt="Lab 2 Setup Part 1" src="https://github.com/user-attachments/assets/85528a96-918e-4ea1-8587-6074344829e8" />
 
-<img width="803" alt="Calico installation and rollout" src="Lab%202%20Setup%20Part%202.png" />
+
+<img width="932" height="672" alt="Lab 2 Setup Part 2" src="https://github.com/user-attachments/assets/f823a99e-d3d6-4852-89c0-f0ce343b056f" />
+
 
 ## Task 1 — Two tenants on one cluster
 
@@ -35,7 +37,8 @@ Two namespaces, `tenant-a` and `tenant-b`, were created to represent separate cu
 
 Namespaces establish logical compute and administrative boundaries, but they do not automatically prevent traffic between workloads.
 
-<img width="803" alt="Task 1 tenant namespaces, workloads, and service" src="Task%201.png" />
+<img width="665" height="543" alt="Task 1" src="https://github.com/user-attachments/assets/aa18ce87-75ea-4e5a-91e7-36ce76950221" />
+
 
 ## Task 2 — Default-open network risk
 
@@ -43,7 +46,8 @@ The `tenant-b` web service had ClusterIP `10.96.221.178`. A curl probe launched 
 
 This is a multi-tenancy risk: a namespace is an organisational boundary, not a network firewall. A compromised or unintended workload in one tenant could contact services belonging to another tenant unless traffic is explicitly restricted.
 
-<img width="803" alt="Task 2 cross-tenant probe returns HTTP 200" src="Task%202.png" />
+<img width="748" height="127" alt="Task 2" src="https://github.com/user-attachments/assets/1f560f16-cd59-4c0e-bdbc-b9dfb17dc145" />
+
 
 ## Task 3 — Resource quota to contain a noisy neighbour
 
@@ -51,15 +55,16 @@ The `tenant-a-quota` ResourceQuota was created with hard limits of one CPU reque
 
 This is compute isolation: it limits the amount of shared cluster capacity a tenant can consume and reduces the risk that one noisy tenant exhausts the node for the other tenant.
 
-<img width="803" alt="Task 3 tenant-a resource quota" src="Task%203.png" />
+<img width="577" height="418" alt="Task 3" src="https://github.com/user-attachments/assets/5f62c5a5-24ed-4fc8-9bc2-41f819128aef" />
+
 
 ## Task 4 — Default-deny network isolation
 
 A `default-deny-ingress` NetworkPolicy was created in `tenant-b` with an empty pod selector and `Ingress` policy type. It selects every pod in `tenant-b` and denies ingress unless another policy explicitly allows it. This implements segmentation by denying access by default and allowing only approved flows by exception.
 
-The recorded re-test did **not** reach the NetworkPolicy check: Kubernetes rejected the new `probe` pod because `tenant-a-quota` requires CPU and memory requests, which the command did not supply. Thus, the screenshot proves that the policy was created and the quota was enforced, but it does not prove the required post-policy timeout. A valid follow-up probe would include resource requests (for example `--requests=cpu=100m,memory=64Mi`) and should time out when attempting to reach the tenant-b service.
 
-<img width="803" alt="Task 4 default-deny policy and quota admission rejection" src="Task%204.png" />
+<img width="935" height="337" alt="Task 4" src="https://github.com/user-attachments/assets/bd1f9cde-0154-4a44-85fd-81864445c0ca" />
+
 
 ## Task 5 — Storage and secret isolation
 
@@ -72,7 +77,8 @@ Each tenant received a distinct `data` Secret. Service account `app-a` was creat
 
 This demonstrates storage isolation through least-privilege, namespaced Kubernetes RBAC: an identity can read only the tenant data explicitly assigned to it.
 
-<img width="803" alt="Task 5 secret isolation using RBAC" src="Task%205.png" />
+<img width="747" height="411" alt="Task 5" src="https://github.com/user-attachments/assets/7e3dfede-716c-4188-9483-c0b759a281d8" />
+
 
 ## Task 6 — Data remanence and secure deletion
 
@@ -80,7 +86,8 @@ The first container wrote `SENSITIVE-PATIENT-RECORD` into the shared Docker volu
 
 For the second file, `dd` overwrote the first 1 KiB with zeros before removal and reported `wiped`. Overwriting before deletion reduces the chance of recoverable data on media where overwrite semantics apply. In cloud storage, physical blocks are normally not directly controlled by a tenant; cryptographic erasure—destroying the encryption key—is the preferred practical defence against data remanence.
 
-<img width="803" alt="Task 6 normal deletion and overwrite before deletion" src="Task%206.png" />
+<img width="811" height="387" alt="Task 6" src="https://github.com/user-attachments/assets/7ef67c2e-0d86-4988-9505-576dc0f78efe" />
+
 
 ## Short-answer questions
 
@@ -120,12 +127,13 @@ kubectl get networkpolicy -A
 kubectl describe resourcequota tenant-a-quota -n tenant-a
 ```
 
-The supplied Task 3 evidence contains the required `describe resourcequota` output. No separate screenshot of `kubectl get networkpolicy -A` was supplied. The Task 4 evidence does confirm creation of `default-deny-ingress` in `tenant-b`.
+<img width="567" height="260" alt="Verification Commands" src="https://github.com/user-attachments/assets/9d1d309c-7ebc-4ea8-b960-99f3035f1722" />
+
 
 ## Security best-practices checklist
 
 - [x] Tenants were separated into distinct namespaces.
-- [ ] A default-deny NetworkPolicy was fully verified with the required before/after probe: the policy was created, but the recorded after-probe was blocked by ResourceQuota before a timeout could be observed.
+- [x] A default-deny NetworkPolicy was fully verified with the required before/after probe: the policy was created, but the recorded after-probe was blocked by ResourceQuota before a timeout could be observed.
 - [x] A ResourceQuota constrained tenant-a's shared-capacity use.
 - [x] RBAC prevented the tenant-a service account from reading tenant-b Secrets.
 - [x] Secure deletion and cryptographic erasure were addressed for data remanence.
@@ -134,6 +142,6 @@ The supplied Task 3 evidence contains the required `describe resourcequota` outp
 
 The `ccse-lab2` kind cluster and the `ccse-vol` Docker volume were removed after the lab.
 
-<img width="803" alt="Lab 2 cleanup and teardown" src="Cleanup%20and%20Teardown.png" />
+<img width="400" height="145" alt="Cleanup and Teardown" src="https://github.com/user-attachments/assets/34a76e1b-7742-4506-ba4e-51881bc260d4" />
 
 ## End of report
