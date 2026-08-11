@@ -18,6 +18,7 @@ This lab demonstrates how a shared Kubernetes cluster can isolate multiple tenan
 
 - A computer with at least 8 GB RAM and administrator rights.
 - Docker Desktop / Docker Engine.
+- GitBash to run commands in Windows.
 - `kind` and `kubectl`.
 - Internet access for the initial image and Calico download.
 
