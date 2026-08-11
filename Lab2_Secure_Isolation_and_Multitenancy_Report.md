@@ -37,16 +37,18 @@ Two namespaces, `tenant-a` and `tenant-b`, were created to represent separate cu
 
 Namespaces establish logical compute and administrative boundaries, but they do not automatically prevent traffic between workloads.
 
-<img width="665" height="543" alt="Task 1" src="https://github.com/user-attachments/assets/aa18ce87-75ea-4e5a-91e7-36ce76950221" />
+<img width="665" height="543" alt="Task 1" src="https://github.com/user-attachments/assets/bdaf3e31-2c38-4a91-a80e-b0905d1aa07c" />
+
 
 
 ## Task 2 — Default-open network risk
 
-The `tenant-b` web service had ClusterIP `10.96.221.178`. A curl probe launched from `tenant-a` reached that address and returned `HTTP 200`. This proves that, before a NetworkPolicy was applied, one tenant could access another tenant's service across namespaces.
+The `tenant-b` ClusterIP is noted. A curl probe launched from `tenant-a` reached that address and returned `HTTP 200`. This proves that, before a NetworkPolicy was applied, one tenant could access another tenant's service across namespaces.
 
 This is a multi-tenancy risk: a namespace is an organisational boundary, not a network firewall. A compromised or unintended workload in one tenant could contact services belonging to another tenant unless traffic is explicitly restricted.
 
-<img width="748" height="127" alt="Task 2" src="https://github.com/user-attachments/assets/1f560f16-cd59-4c0e-bdbc-b9dfb17dc145" />
+<img width="748" height="127" alt="Task 2" src="https://github.com/user-attachments/assets/7ae87c53-2888-43de-89f5-cc96ec7f27ba" />
+
 
 
 ## Task 3 — Resource quota to contain a noisy neighbour
@@ -86,7 +88,8 @@ The first container wrote `SENSITIVE-PATIENT-RECORD` into the shared Docker volu
 
 For the second file, `dd` overwrote the first 1 KiB with zeros before removal and reported `wiped`. Overwriting before deletion reduces the chance of recoverable data on media where overwrite semantics apply. In cloud storage, physical blocks are normally not directly controlled by a tenant; cryptographic erasure—destroying the encryption key—is the preferred practical defence against data remanence.
 
-<img width="811" height="387" alt="Task 6" src="https://github.com/user-attachments/assets/7ef67c2e-0d86-4988-9505-576dc0f78efe" />
+<img width="811" height="387" alt="Task 6" src="https://github.com/user-attachments/assets/fa6fc0d1-eefc-4c05-9b19-4146966c9837" />
+
 
 
 ## Short-answer questions
