@@ -64,6 +64,7 @@ This is compute isolation: it limits the amount of shared cluster capacity a ten
 ## Task 4 — Default-deny network isolation
 
 A `default-deny-ingress` NetworkPolicy was created in `tenant-b` with an empty pod selector and `Ingress` policy type. It selects every pod in `tenant-b` and denies ingress unless another policy explicitly allows it. This implements segmentation by denying access by default and allowing only approved flows by exception.
+Ingress = Incoming network traffic, in this case `tenant-a` from communicating to `tenant-b`. Getting an error when communication is prompted.
 
 
 <img width="935" height="337" alt="Task 4" src="https://github.com/user-attachments/assets/bd1f9cde-0154-4a44-85fd-81864445c0ca" />
