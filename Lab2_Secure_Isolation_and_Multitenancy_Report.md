@@ -50,6 +50,8 @@ This is a multi-tenancy risk: a namespace is an organisational boundary, not a n
 
 <img width="748" height="127" alt="Task 2" src="https://github.com/user-attachments/assets/7ae87c53-2888-43de-89f5-cc96ec7f27ba" />
 
+`HTTP 200 is accidentally blurred out in the evidence picture...`
+
 
 
 ## Task 3 — Resource quota to contain a noisy neighbour
