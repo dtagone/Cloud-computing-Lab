@@ -25,9 +25,23 @@ This lab implements layered cloud security controls: authentication, multi-facto
 
 ## Task 1 — Authentication: Password-Protected Service
 
-An NGINX service (`authsvc`) was configured with HTTP Basic authentication for the `student` account. The unauthenticated request returned **401**, which proves that the service rejects a request with no credentials. Supplying the correct username and password returned **Authenticated OK** (HTTP 200), proving that authentication succeeds only with valid credentials.
+A `student` account was created with:
+``docker run --rm httpd:alpine htpasswd -nbB student 'P@ssw0rd!' > htpasswd.txt``
 
-![Task 1 evidence](Task%201%20evidence.png)
+Then an NGINX service (`authsvc`) was configured with HTTP Basic authentication for the `student` account. 
+
+The unauthenticated request returned **401**, which proves that the service rejects a request with no credentials. 
+
+``curl -s -o /dev/null -w 'no-creds: %{http_code}\n' http://localhost:8080``
+
+Supplying the correct username and password returned **Authenticated OK** (HTTP 200), proving that authentication succeeds only with valid credentials.
+
+``curl -s -u student:'P@ssw0rd!' http://localhost:8080``
+
+Evidence:
+
+<img width="687" height="542" alt="Task 1 evidence" src="https://github.com/user-attachments/assets/48b61736-5afe-4ffc-b98f-7e394f812dab" />
+
 
 ## Task 2 — Add a Second Factor (MFA / TOTP)
 
