@@ -49,9 +49,16 @@ A base32 shared secret was generated and enrolled in an authenticator app. A cur
 
 `oathtool` could not be used in the Windows Git Bash environment. As a compatible workaround, the expected TOTP value was generated locally with Python using Base32 decoding, HMAC-SHA1, and the standard 30-second TOTP time step. This produces the same type of one-time code as `oathtool --totp -b`, without exposing the shared secret in this report.
 
-![Task 2 enrolment evidence](Task%202%20Code%20evidence.jpeg)
+<img width="628" height="350" alt="Oathtool workaround" src="https://github.com/user-attachments/assets/06491bfb-ab65-4b9e-adb9-181a73851bea" />
 
-![Task 2 MFA validation evidence](Task%202%20evidence.png)
+Google authenticator is used for the 6 digit code.
+
+<img width="520" height="396" alt="Task 2 Code evidence" src="https://github.com/user-attachments/assets/be593c42-0c41-4b65-ad3b-dfc3773f4502" />
+
+The commands comes as followed:
+
+<img width="578" height="204" alt="Task 2 evidence" src="https://github.com/user-attachments/assets/5d0563e3-75e5-4d38-91e5-07746522331e" />
+
 
 ## Task 3 — Authorization: Kubernetes RBAC
 
@@ -65,9 +72,10 @@ The authorization tests confirm least privilege:
 | Create a deployment in `app` | NO | Deployment creation was not granted. |
 | Delete pods in `app` | NO | `delete` was not granted. |
 
-![Task 3.1 role and binding evidence](Task%203.1.png)
+<img width="768" height="645" alt="Task 3 1" src="https://github.com/user-attachments/assets/361c256f-fc5d-45f7-8600-2281324a1a90" />
 
-![Task 3.2 authorization-test evidence](Task%203.2.png)
+<img width="477" height="251" alt="Task 3 2" src="https://github.com/user-attachments/assets/c7468884-f5f5-4e44-ad92-80b96b290faa" />
+
 
 ## Task 4 — Network Segmentation (Three-Tier)
 
@@ -75,15 +83,17 @@ Two Docker networks establish a three-tier layout: `web` is attached only to `fr
 
 The test shows that `web` cannot resolve or connect to `db` (**BLOCKED**), while `app` shares `backend-net` with `db` and can reach Redis on port 6379 (**REACHABLE**). The initial Alpine `apk` command was unavailable inside the Debian-based NGINX container; installing `netcat-openbsd` using `apt-get` provided the valid connectivity test.
 
-![Task 4.1 network setup evidence](Task%204.1.png)
+<img width="720" height="610" alt="Task 4 1" src="https://github.com/user-attachments/assets/a50fcf4a-3295-437d-8991-131aa914809a" />
 
-![Task 4.2 segmentation-test evidence](Task%204.2.png)
+<img width="749" height="448" alt="Task 4 2" src="https://github.com/user-attachments/assets/54271080-37fa-479e-a9f6-209067eb9046" />
+
 
 ## Task 5 — Firewall Rules (Default-Deny)
 
 Inside a temporary privileged test container, the firewall INPUT policy was set to `DROP`. Only inbound TCP port 443 and loopback traffic were explicitly accepted. The displayed ruleset confirms the default-deny policy and its two required exceptions.
 
-![Task 5 firewall evidence](Task%205%20evidence.png)
+<img width="675" height="209" alt="Task 5 evidence" src="https://github.com/user-attachments/assets/33870ee9-1cdd-4c3f-8831-dee8df4842be" />
+
 
 ## Task 6 — Container / Host Hardening
 
@@ -91,9 +101,11 @@ The `hardened` NGINX container was run as non-root user `1000:1000`, with a read
 
 The Trivy summary for `nginx:alpine (alpine 3.24.1)` reported **0 vulnerabilities**. Its Secrets field is shown as `-` (not scanned), so this report does not claim a secrets-scan result.
 
-![Task 6.1 hardened-container evidence](Task%206.1.png)
+<img width="720" height="488" alt="Task 6 1" src="https://github.com/user-attachments/assets/b50421ad-4e67-4113-afd5-ded1321809e8" />
 
-![Task 6.2 image-scan evidence](Task%206.2.png)
+
+<img width="635" height="193" alt="Task 6 2" src="https://github.com/user-attachments/assets/d6aaf291-9219-4f8e-b817-1dce965aadeb" />
+
 
 ### Hardening measures and the attacks they blunt
 
@@ -137,7 +149,8 @@ kubectl get rolebinding dev-rb -n app -o yaml
 docker inspect hardened --format '{{json .HostConfig.CapDrop}}'
 ```
 
-![Verification-command evidence](Verification%20command.png)
+<img width="600" height="390" alt="Verification command" src="https://github.com/user-attachments/assets/750f9844-e61d-4e33-be9d-22f2100541ee" />
+
 
 ## Security Best-Practices Checklist
 
@@ -158,6 +171,7 @@ docker network rm frontend-net backend-net 2>/dev/null
 kind delete cluster --name ccse-lab4
 ```
 
-![Cleanup and teardown evidence](Cleanup%20and%20teardown.png)
+<img width="520" height="279" alt="Cleanup and teardown" src="https://github.com/user-attachments/assets/4bdffe29-3532-4e28-be93-cb9adf48c042" />
+
 
 ## END OF REPORT
