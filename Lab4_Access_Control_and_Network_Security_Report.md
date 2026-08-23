@@ -18,7 +18,7 @@ This lab implements layered cloud security controls: authentication, multi-facto
 
 - Docker Desktop and Git Bash for Windows.
 - `kind` and `kubectl` for the local Kubernetes cluster.
-- An authenticator application for Task 2. (This lab uses Google authenticator)
+- An authenticator application for Task 2. (Google authenticator is used for this lab.)
 - A workaround code will be provided due to oathtool not being able in Windows.
 - Trivy (or an equivalent scanner) for image scanning.
 - Internet access for the initial container-image downloads.
