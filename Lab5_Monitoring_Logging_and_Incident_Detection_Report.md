@@ -25,19 +25,22 @@ This lab demonstrates cloud security monitoring and incident response through ce
 
 LocalStack was started and the CloudWatch log group `/ccse/app` plus the `auth` stream were created. This provides one central destination for application telemetry instead of leaving logs only on the application host.
 
-<img width="768" alt="Setup evidence: LocalStack endpoint and CloudWatch log group and stream creation" src="Setup.png" />
+<img width="747" height="157" alt="Setup" src="https://github.com/user-attachments/assets/db79ea3a-9aeb-4709-b3d9-3c7a992d0ed2" />
+
 
 ## Task 1 — Generate application logs
 
 `auth.log` was created with seven authentication and data-access events. The log contains one normal login by `ahmad`, four failed `admin` logins from `203.0.113.9`, a later successful `admin` login from that same IP, and a `500MB` data export. Together, these entries provide the raw evidence needed to detect a suspicious sequence.
 
-<img width="768" alt="Task 1 evidence: generated authentication log" src="Task 1 Evidence.png" />
+<img width="630" height="350" alt="Task 1 Evidence" src="https://github.com/user-attachments/assets/02dcda7e-c6de-43ca-a0e1-2632e0a013ad" />
+
 
 ## Task 2 — Centralise logs in CloudWatch
 
 Each line from `auth.log` was sent to the `/ccse/app` / `auth` CloudWatch Logs stream in LocalStack. The `get-log-events` read-back returns all seven messages, confirming that central collection was successful. Centralised logging improves visibility, supports investigation after a host incident, and enables organisation-wide monitoring.
 
-<img width="908" alt="Task 2 evidence: CloudWatch get-log-events read-back" src="Task 2 Evidence.png" />
+<img width="938" height="305" alt="Task 2 Evidence" src="https://github.com/user-attachments/assets/a7ee3ecf-568d-46e6-89c1-cbf229542999" />
+
 
 ## Task 3 — Query security-relevant activity
 
@@ -47,7 +50,8 @@ The failed-login query grouped failures by the username and source IP fields. It
 grep LOGIN_FAIL auth.log | awk '{print $4, $5}' | sort | uniq -c
 ```
 
-<img width="768" alt="Task 3 evidence: four failed logins from the suspicious IP" src="Task 3 Evidence.png" />
+<img width="635" height="75" alt="Task 3 Evidence" src="https://github.com/user-attachments/assets/3b813967-3de5-4080-8e55-14e74c8f3bac" />
+
 
 ## Task 4 — Tamper-evident hash-chained log
 
@@ -55,9 +59,9 @@ Each record was chained to the SHA-256 hash of the previous record, beginning wi
 
 The export value was then altered from `500MB` to `5MB` in `auth.tampered`. Because the altered line is part of the input to the final chained hash, recomputing the chain produces a different final hash from the original. This makes the modification detectable. In an operational design, the final hash or the chain should also be forwarded to a separate append-only store, preventing an attacker who changes the application log from rewriting the reference audit trail.
 
-<img width="768" alt="Task 4 evidence: original hash-chained authentication log" src="Task 4 Evidence.png" />
+<img width="935" height="593" alt="Task 4 Evidence" src="https://github.com/user-attachments/assets/0dc7ae60-c830-43e4-94ff-5ea8500c95c0" />
 
-<img width="768" alt="Task 4 tampering evidence: export size changed from 500MB to 5MB" src="Task 4 Evidence tampered.png" />
+<img width="612" height="170" alt="Task 4 Evidence tampered" src="https://github.com/user-attachments/assets/35663d74-dfcd-4a2e-a439-0621e6911343" />
 
 ## Task 5 — Detect the incident through correlation
 
@@ -70,7 +74,8 @@ ALERT: probable brute-force -> compromise -> data exfiltration
 
 No individual log entry is conclusive by itself. The sequence indicates that brute-force attempts were followed by a likely account compromise and a potentially unauthorised 500MB data export—an incident requiring response.
 
-<img width="768" alt="Task 5 evidence: correlation output and incident alert" src="Task 5 Evidence.png" />
+<img width="705" height="372" alt="Task 5 Evidence" src="https://github.com/user-attachments/assets/2c6dcbd8-e122-47f4-af78-3cd4957432bc" />
+
 
 ## Task 6 — Incident response: contain and collect evidence
 
@@ -84,7 +89,8 @@ Next, `auth.log` was copied to the timestamped file `evidence_20260901.log`, and
 
 This establishes a baseline for proving that the collected evidence has not changed after acquisition.
 
-<img width="768" alt="Task 6 evidence: containment rule and evidence SHA-256 file" src="Task 6 Evidence.png" />
+<img width="878" height="267" alt="Task 6 Evidence" src="https://github.com/user-attachments/assets/4b5327f9-ec5b-43ea-bb3c-fde65a3309b3" />
+
 
 ## Incident report
 
@@ -119,13 +125,15 @@ sha256sum -c evidence.sha256
 
 The hash verification returned `evidence_20260901.log: OK`. The LocalStack response listed the created log group; its displayed local path reflects the Git Bash path-conversion behaviour in this environment.
 
-<img width="768" alt="Verification evidence: log group description and successful evidence hash check" src="Verification commands.png" />
+<img width="935" height="363" alt="Verification commands" src="https://github.com/user-attachments/assets/e9da3738-6062-42f0-887a-47d2a51bfab9" />
+
 
 ## Cleanup and teardown
 
 The temporary logs, chained and tampered copies, and evidence artefacts were removed with `rm -f`. The LocalStack Docker container was then stopped. This removes the temporary lab environment after evidence collection and verification.
 
-<img width="768" alt="Cleanup evidence: temporary files removed and LocalStack stopped" src="Cleanup and teardown.png" />
+<img width="665" height="122" alt="Cleanup and teardown" src="https://github.com/user-attachments/assets/38acc633-c9b1-4b82-acfc-cb06286f831a" />
+
 
 ## Short-answer questions
 
