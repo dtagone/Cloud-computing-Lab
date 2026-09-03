@@ -32,14 +32,14 @@ LocalStack was started and the CloudWatch log group `/ccse/app` plus the `auth` 
 
 `auth.log` was created with seven authentication and data-access events. The log contains one normal login by `ahmad`, four failed `admin` logins from `203.0.113.9`, a later successful `admin` login from that same IP, and a `500MB` data export. Together, these entries provide the raw evidence needed to detect a suspicious sequence.
 
-<img width="630" height="350" alt="Task 1 Evidence" src="https://github.com/user-attachments/assets/02dcda7e-c6de-43ca-a0e1-2632e0a013ad" />
+<img width="630" height="350" alt="Task 1 Evidence" src="https://github.com/user-attachments/assets/103d2276-83cd-48fe-ad33-535f1b567aa9" />
 
 
 ## Task 2 — Centralise logs in CloudWatch
 
 Each line from `auth.log` was sent to the `/ccse/app` / `auth` CloudWatch Logs stream in LocalStack. The `get-log-events` read-back returns all seven messages, confirming that central collection was successful. Centralised logging improves visibility, supports investigation after a host incident, and enables organisation-wide monitoring.
 
-<img width="938" height="305" alt="Task 2 Evidence" src="https://github.com/user-attachments/assets/a7ee3ecf-568d-46e6-89c1-cbf229542999" />
+<img width="938" height="305" alt="Task 2 Evidence" src="https://github.com/user-attachments/assets/bb19d31e-f7e2-4c5f-9376-7b8e098f604b" />
 
 
 ## Task 3 — Query security-relevant activity
@@ -50,7 +50,7 @@ The failed-login query grouped failures by the username and source IP fields. It
 grep LOGIN_FAIL auth.log | awk '{print $4, $5}' | sort | uniq -c
 ```
 
-<img width="635" height="75" alt="Task 3 Evidence" src="https://github.com/user-attachments/assets/3b813967-3de5-4080-8e55-14e74c8f3bac" />
+<img width="635" height="75" alt="Task 3 Evidence" src="https://github.com/user-attachments/assets/f730ff5d-cb54-447d-936e-c962ca868579" />
 
 
 ## Task 4 — Tamper-evident hash-chained log
@@ -59,9 +59,9 @@ Each record was chained to the SHA-256 hash of the previous record, beginning wi
 
 The export value was then altered from `500MB` to `5MB` in `auth.tampered`. Because the altered line is part of the input to the final chained hash, recomputing the chain produces a different final hash from the original. This makes the modification detectable. In an operational design, the final hash or the chain should also be forwarded to a separate append-only store, preventing an attacker who changes the application log from rewriting the reference audit trail.
 
-<img width="935" height="593" alt="Task 4 Evidence" src="https://github.com/user-attachments/assets/0dc7ae60-c830-43e4-94ff-5ea8500c95c0" />
+<img width="935" height="593" alt="Task 4 Evidence" src="https://github.com/user-attachments/assets/088ad689-c26a-471e-bcb0-461abbb65dc9" />
 
-<img width="612" height="170" alt="Task 4 Evidence tampered" src="https://github.com/user-attachments/assets/35663d74-dfcd-4a2e-a439-0621e6911343" />
+<img width="612" height="170" alt="Task 4 Evidence tampered" src="https://github.com/user-attachments/assets/2bc7ede2-29c9-458e-b3be-8d1c35981386" />
 
 ## Task 5 — Detect the incident through correlation
 
