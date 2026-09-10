@@ -36,9 +36,9 @@ Three objects were created and tagged before access controls were applied. The o
 
 The bucket policy used `"Principal": "*"` with `s3:GetObject` on `arn:aws:s3:::miit-patient-records-11331/*`. An unauthenticated `curl` request returned `HTTP 200` and displayed the confidential patient record. This proves that the exposure required no exploit: the wildcard principal authorised every requester.
 
-<img width="768" alt="Task 2 public-read bucket policy" src="Task 2 Evidence.png" />
+<img width="792" height="527" alt="Task 2 Evidence" src="https://github.com/user-attachments/assets/a2d8d03d-7590-4cbc-ba8a-48ed09ded2ec" />
 
-<img width="768" alt="Task 2 anonymous HTTP 200 and leaked record" src="Task 2 Evidence Attacker view.png" />
+<img width="547" height="162" alt="Task 2 Evidence Attacker view" src="https://github.com/user-attachments/assets/312f16c2-b311-4870-9fe6-418b6f26c213" />
 
 ## Task 3 — Remediate with Block Public Access
 
@@ -48,9 +48,9 @@ The public policy was removed and all four bucket-level Block Public Access flag
 
 A guardrail is preventative: it stops a risky policy from being attached in the first place. A detective control finds or reports public exposure only after a configuration has already created a disclosure window. The former is therefore stronger for a multi-engineer environment because it reduces both the chance and the blast radius of human error.
 
-<img width="768" alt="Task 3 all Block Public Access flags true and LocalStack anonymous-read limitation" src="Task 3.1 Evidence.png" />
+<img width="857" height="472" alt="Task 3 1 Evidence" src="https://github.com/user-attachments/assets/00c5892a-3664-4569-8174-d09482e46fc7" />
 
-<img width="768" alt="Task 3 least-privilege policy restricted to internal prefix" src="Task 3.2 Evidence.png" />
+<img width="865" height="515" alt="Task 3 2 Evidence" src="https://github.com/user-attachments/assets/6eb06564-7b8e-4eb2-8cda-06eb8a4e9668" />
 
 ## Task 4 — Identity policy versus resource policy
 
@@ -64,17 +64,21 @@ The `DataAnalyst` IAM identity policy allows `s3:GetObject` and `s3:ListBucket` 
 
 For `internal/roster.txt`, the identity policy allows `GetObject` and the resource policy's `AllowAnalystInternal` also matches, so the request is allowed. For `confidential/record.txt`, the identity policy's broad allow matches, but `DenyAnalystConfidential` matches the same analyst, action (`s3:*` includes `GetObject`), and `confidential/*` resource. The explicit bucket-policy deny decides the request, so real AWS must deny it. The observed success should be treated as LocalStack's policy-enforcement limitation, while the two policy documents and this evaluation provide the requested evidence.
 
-<img width="768" alt="Task 4 IAM allow policy for DataAnalyst" src="Task 4.1 Evidence.png" />
+<img width="683" height="493" alt="Task 4 1 Evidence" src="https://github.com/user-attachments/assets/2c89d7ac-e2cb-4692-a8da-6c60cc7d6a2f" />
 
-<img width="768" alt="Task 4 bucket policy allowing internal and explicitly denying confidential" src="Task 4.3 Evidence.png" />
+<img width="721" height="352" alt="Task 4 2 Evidence" src="https://github.com/user-attachments/assets/c6c8ceb2-0191-4f49-9d11-8d5a17c46bc2" />
 
-<img width="768" alt="Task 4 analyst attempts; LocalStack allowed both requests" src="Task 4.4 Evidence.png" />
+<img width="846" height="385" alt="Task 4 3 Evidence" src="https://github.com/user-attachments/assets/9ddd8872-70fc-425e-a336-ba84a0746624" />
+
+<img width="893" height="626" alt="Task 4 4 Evidence" src="https://github.com/user-attachments/assets/6bf8832b-d410-42ce-9a93-a74c8e23624b" />
 
 ## Task 5 — Default encryption at rest
 
 A dedicated KMS key (`552871ec-b3c5-4f69-929e-68d9699884c0`) was configured as the bucket default with `SSEAlgorithm: aws:kms` and `BucketKeyEnabled: true`. Uploading `confidential/record-v2.txt` without encryption flags still produced `aws:kms`, the KMS key ARN, and `true` for Bucket Key in `head-object`. This demonstrates bucket-enforced server-side encryption without relying on each uploader to request it.
 
-<img width="768" alt="Task 5 SSE-KMS default encryption and head-object verification" src="Task 5.2 Evidence.png" />
+<img width="582" height="342" alt="Task 5 1 Evidence" src="https://github.com/user-attachments/assets/c26370db-b6bf-49bf-a54f-a062bd7161aa" />
+
+<img width="891" height="770" alt="Task 5 2 Evidence" src="https://github.com/user-attachments/assets/7067d4ff-a3c8-451e-a269-3728e8363fbe" />
 
 ## Task 6 — Delegated access and the condition-key trap
 
@@ -84,15 +88,19 @@ A presigned URL was created for only `internal/roster.txt` with a 60-second expi
 
 The policy itself is appropriate for AWS's HTTPS S3 endpoint but inappropriate for this plain-HTTP emulator. Condition keys must be evaluated against the actual deployment environment: blindly copying a correct TLS-only policy into LocalStack can lock out the operator in an enforcing environment, whereas assuming the emulator's successful call proves a production policy works would be unsafe.
 
-<img width="768" alt="Task 6 presigned URL expiry test and TLS-only policy" src="Task 6.1 Evidence.png" />
+<img width="935" height="741" alt="Task 6 1 Evidence" src="https://github.com/user-attachments/assets/f6a61a24-8906-43a1-8852-7c184406cecc" />
 
-<img width="768" alt="Task 6 LocalStack list operation succeeding despite the transport deny" src="Task 6.2 Evidence.png" />
+<img width="600" height="742" alt="Task 6 2 Evidence" src="https://github.com/user-attachments/assets/cb4099b3-1309-4d2b-b14f-cea2cd6b2f77" />
 
 ## Task 7 — Versioning, delete markers, and data remanence
 
 Versioning was enabled. Two revisions were uploaded after the original `null` version. Deleting the key created a current delete marker, so an ordinary `get-object` failed with `NoSuchKey`; retrieving version `null` still recovered the original unredacted diagnosis. This is object-level data remanence. The original version was later explicitly deleted, but the evidence listing shows other versions still require per-version removal.
 
-<img width="768" alt="Task 7 delete marker and recovery of original patient record" src="Task 7.2 Evidence.png" />
+<img width="687" height="671" alt="Task 7 1 Evidence" src="https://github.com/user-attachments/assets/f66bde98-09bc-4d02-89b5-e3b0d68bc5c3" />
+
+<img width="933" height="782" alt="Task 7 2 Evidence" src="https://github.com/user-attachments/assets/25dab1c2-298e-4972-9913-4470ac4f7996" />
+
+<img width="801" height="315" alt="Task 7 3 Evidence" src="https://github.com/user-attachments/assets/53a016ef-190e-43f2-872f-462d11e4d8ed" />
 
 ## Task 8 — Lifecycle, retention, and cryptographic erasure
 
@@ -104,11 +112,11 @@ The KMS key was first enabled, then disabled and scheduled for deletion with a s
 
 In AWS, destroying the customer-managed key makes ciphertext encrypted under it unrecoverable, including replicated or backed-up copies that retain only ciphertext. This provides stronger assurance than overwriting because the organisation cannot reliably locate or control every physical disk, replica, backup, or storage remnant; disabling/scheduling destruction of the key centrally removes the ability to decrypt them. Key deletion must still follow retention, legal-hold, and recovery-window requirements because it is deliberately irreversible after completion.
 
-<img width="768" alt="Task 8 enabled lifecycle retention rules" src="Task 8.1 Evidence.png" />
+<img width="662" height="662" alt="Task 8 1 Evidence" src="https://github.com/user-attachments/assets/40c6ab30-6ddb-40f6-acb5-03e2d6a2d923" />
 
-<img width="768" alt="Task 8 KMS key in PendingDeletion and LocalStack S3-read limitation" src="Task 8.2 Evidence.png" />
+<img width="930" height="776" alt="Task 8 2 Evidence" src="https://github.com/user-attachments/assets/144200ce-2a61-4ca4-978b-bc5c0a3d91e0" />
 
-<img width="768" alt="Task 8 KMS invalid state verification" src="Task 8.2 Evidence verify.png" />
+<img width="932" height="213" alt="Task 8 2 Evidence verify" src="https://github.com/user-attachments/assets/146a48bb-3328-4cfb-a9ba-76c6683a5444" />
 
 ## Short-answer questions
 
@@ -144,15 +152,15 @@ With versioning, `delete-object` creates a delete marker rather than destroying 
 
 The supplied verification output confirms the final security posture: all four Block Public Access flags are `True`, versioning is `Enabled`, default encryption is `aws:kms` using key `552871ec-b3c5-4f69-929e-68d9699884c0`, both lifecycle rules are `Enabled`, and the key state is `PendingDeletion`.
 
-<img width="768" alt="Final verification commands and security posture" src="Verification commands.png" />
+<img width="930" height="577" alt="Verification commands" src="https://github.com/user-attachments/assets/2c4b876d-553e-424b-91c1-42b5e3416f6c" />
 
 ## Cleanup and teardown
 
 The bucket policy was removed, all object versions and delete markers were deleted explicitly, and the LocalStack container was removed. Explicit deletion of both versions and delete markers is necessary because a versioned bucket is not empty after an ordinary delete.
 
-<img width="768" alt="Cleanup of versions and delete markers" src="Clean up and teardown.png" />
+<img width="761" height="827" alt="Clean up and teardown" src="https://github.com/user-attachments/assets/3151ad6a-7966-4d42-a4f9-485c2653c38f" />
 
-<img width="768" alt="LocalStack teardown" src="Clean up and teardown 2.png" />
+<img width="340" height="95" alt="Clean up and teardown 2" src="https://github.com/user-attachments/assets/20d19dda-2399-4d2d-9078-030ac62612e4" />
 
 ## Security best-practices checklist
 
