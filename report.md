@@ -4,6 +4,7 @@ Name: Muhammad A'beed bin Firdaus 52215124303
 Subject: Cloud Computing Security Essentials  
 Code: IKB 42603  
 Date: 10 September 2026
+
 Lecturer: Madam Adani
 
 ## Purpose
