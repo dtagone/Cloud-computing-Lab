@@ -4,6 +4,7 @@ Name: Muhammad A'beed bin Firdaus 52215124303
 Subject: Cloud Computing Security Essentials  
 Code: IKB 42603  
 Date: 10 September 2026
+Lecturer: Madam Adani
 
 ## Purpose
 
@@ -13,11 +14,15 @@ This lab demonstrates secure object-storage operations in Amazon S3 emulated by 
 
 LocalStack Pro was started at `http://localhost:4566` with `ENFORCE_IAM=1`; the AWS CLI was configured for `us-east-1`. The `sts get-caller-identity` response confirms the LocalStack account `000000000000`.
 
-<img width="768" alt="Environment setup and LocalStack identity" src="Environment setup.png" />
+<img width="932" height="496" alt="Environment setup" src="https://github.com/user-attachments/assets/2039f7c0-13b1-4bfd-98bf-34be93723e3d" />
 
 ## Task 1 — Classify data before storage
 
 Three objects were created and tagged before access controls were applied. The object listing shows the three prefixes and the tag query confirms `classification=confidential` on the patient record.
+
+<img width="545" height="197" alt="Task 1 1 Evidence" src="https://github.com/user-attachments/assets/1025ac61-1540-42e5-a342-d31da15947ef" />
+
+<img width="755" height="702" alt="Task 1 2 Evidence" src="https://github.com/user-attachments/assets/205c11be-6bd8-4b7e-a223-e5d3f2d36d7d" />
 
 | Classification | Who may read it | Impact if leaked | Control implemented |
 |---|---|---|---|
@@ -25,7 +30,7 @@ Three objects were created and tagged before access controls were applied. The o
 | internal | Authorised hospital staff / account | Operational information and staff privacy may be exposed | Least-privilege bucket policy scoped to `internal/*`; time-limited presigned sharing |
 | confidential | Only authorised clinical personnel and system owners | Patient-data disclosure, privacy harm, and regulatory breach | `confidential/` prefix; SSE-KMS default encryption, Block Public Access, versioning, lifecycle, and cryptographic erasure capability |
 
-<img width="768" alt="Task 1 object listing and confidential classification tag" src="Task 1.3 Evidence.png" />
+<img width="742" height="392" alt="Task 1 3 Evidence" src="https://github.com/user-attachments/assets/239ba247-709e-4c85-aa5a-ae5a710652ec" />
 
 ## Task 2 — Reproduce the public-bucket breach
 
